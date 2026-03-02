@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Rutiinit">
+<meta name="theme-color" id="theme-color-meta" content="#FF9F43">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Perheen Rutiinit ⭐</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --morning-bg1: #FFF4CC;
+  --morning-bg2: #FFE0A3;
+  --morning-bg3: #FFDBB5;
+  --evening-bg1: #0F1535;
+  --evening-bg2: #1A2060;
+  --evening-bg3: #2D1B5E;
+  --green: #6BCB77;
+  --purple: #A78BFA;
+  --orange: #FF9F43;
+  --pink: #FF6B9D;
+  --yellow: #FFD93D;
+  --radius: 20px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background 0.8s ease;
+}
+body.morning { background: linear-gradient(160deg, var(--morning-bg1), var(--morning-bg2) 50%, var(--morning-bg3)); }
+body.evening { background: linear-gradient(160deg, var(--evening-bg1), var(--evening-bg2) 50%, var(--evening-bg3)); }
+
+/* ========== STARS ========== */
+.stars { position:fixed; inset:0; pointer-events:none; z-index:0; opacity:0; transition:opacity 1s; }
+body.evening .stars { opacity:1; }
+.star-dot { position:absolute; border-radius:50%; background:white; animation:twinkle 2s infinite alternate; }
+@keyframes twinkle { from{opacity:0.2;transform:scale(1)} to{opacity:0.9;transform:scale(1.5)} }
+
+/* ========== SCREENS ========== */
+.screen { display:none; min-height:100vh; position:relative; z-index:1; }
+.screen.active { display:block; }
+
+/* ========== SETUP WIZARD ========== */
+#screen-setup {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  min-height:100vh; padding:32px 20px;
+  background: linear-gradient(160deg, #667eea, #764ba2);
+}
+#screen-setup.active { display:flex; }
+
+.setup-card {
+  background: white; border-radius: 28px; padding: 32px 28px;
+  max-width: 420px; width: 100%;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.2);
+  animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes popIn { from{opacity:0;transform:scale(0.85) translateY(20px)} to{opacity:1;transform:scale(1) translateY(0)} }
+
+.setup-logo { font-size: 56px; text-align:center; display:block; margin-bottom:8px; animation:bounce 2s infinite; }
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+.setup-card h1 { font-family:'Baloo 2',cursive; font-size:1.8rem; font-weight:900; text-align:center; color:#2D3561; margin-bottom:6px; }
+.setup-card p.lead { text-align:center; color:#888; font-size:14px; margin-bottom:28px; line-height:1.5; }
+
+.setup-step { display:none; }
+.setup-step.active { display:block; animation: fadeSlide 0.3s ease; }
+@keyframes fadeSlide { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:translateX(0)} }
+
+.step-label { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#A78BFA; font-weight:700; margin-bottom:16px; }
+
+.kids-list { margin-bottom:16px; }
+.kid-setup-row {
+  display:flex; align-items:center; gap:10px;
+  background:#F8F7FF; border-radius:16px; padding:12px 14px;
+  margin-bottom:10px; animation: fadeSlide 0.3s ease;
+}
+.kid-setup-row .avatar-pick { font-size:28px; cursor:pointer; flex-shrink:0; transition:transform 0.2s; }
+.kid-setup-row .avatar-pick:hover { transform:scale(1.2); }
+.kid-setup-row input[type=text] {
+  flex:1; border:none; background:transparent; font-family:'Nunito',sans-serif;
+  font-size:16px; font-weight:700; color:#2D3561; outline:none;
+}
+.kid-setup-row input[type=text]::placeholder { color:#CCC; font-weight:400; }
+.age-select {
+  border:2px solid #E8E4FF; border-radius:10px; padding:6px 10px;
+  font-family:'Nunito',sans-serif; font-size:14px; font-weight:600; color:#2D3561;
+  background:white; outline:none; cursor:pointer; flex-shrink:0;
+}
+.remove-kid { background:none; border:none; font-size:18px; color:#DDD; cursor:pointer; transition:color 0.2s; flex-shrink:0; }
+.remove-kid:hover { color:#FF6B9D; }
+
+.add-kid-btn {
+  width:100%; padding:12px; border-radius:16px; border:2px dashed #D8D4F0;
+  background:transparent; font-family:'Nunito',sans-serif; font-size:14px;
+  font-weight:700; color:#A78BFA; cursor:pointer; transition:all 0.2s;
+}
+.add-kid-btn:hover { background:#F0EEFF; border-color:#A78BFA; }
+
+.primary-btn {
+  width:100%; padding:15px; border-radius:16px; border:none;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color:white; font-family:'Nunito',sans-serif; font-size:16px; font-weight:800;
+  cursor:pointer; transition:all 0.2s; margin-top:20px;
+}
+.primary-btn:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(102,126,234,0.4); }
+.primary-btn:active { transform:scale(0.98); }
+
+/* Avatar picker modal */
+.avatar-modal {
+  display:none; position:fixed; inset:0; z-index:200;
+  background:rgba(0,0,0,0.5); align-items:flex-end; justify-content:center;
+}
+.avatar-modal.open { display:flex; }
+.avatar-grid-wrap {
+  background:white; border-radius:28px 28px 0 0; padding:24px 20px 40px;
+  width:100%; max-width:420px;
+  animation: slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+.avatar-grid-wrap h3 { font-family:'Baloo 2',cursive; font-size:1.1rem; color:#2D3561; margin-bottom:16px; text-align:center; }
+.avatar-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:10px; }
+.avatar-opt { font-size:28px; text-align:center; cursor:pointer; padding:8px; border-radius:12px; transition:all 0.15s; }
+.avatar-opt:hover { background:#F0EEFF; transform:scale(1.2); }
+
+/* ========== MAIN APP ========== */
+#screen-app { padding-bottom: 80px; }
+#screen-app.active { display:block; }
+
+/* Toggle */
+.toggle-wrap { display:flex; justify-content:center; padding:20px 20px 6px; position:relative; z-index:10; }
+.toggle { display:flex; background:rgba(255,255,255,0.35); border-radius:50px; padding:5px; gap:4px; backdrop-filter:blur(10px); box-shadow:0 4px 20px rgba(0,0,0,0.1); }
+.toggle-btn { padding:9px 24px; border-radius:40px; border:none; font-family:'Nunito',sans-serif; font-size:15px; font-weight:700; cursor:pointer; transition:all 0.3s; background:transparent; }
+body.morning .toggle-btn { color:rgba(45,53,97,0.45); }
+body.morning .toggle-btn.active { background:white; color:#2D3561; box-shadow:0 2px 12px rgba(0,0,0,0.12); }
+body.evening .toggle-btn { color:rgba(232,238,255,0.35); }
+body.evening .toggle-btn.active { background:#2D3561; color:white; box-shadow:0 2px 12px rgba(0,0,0,0.3); }
+
+/* Header */
+.app-header { text-align:center; padding:4px 20px 16px; position:relative; z-index:10; }
+.app-header .big-emoji { font-size:50px; display:block; animation:bounce 2.5s infinite; }
+.app-header h1 { font-family:'Baloo 2',cursive; font-size:clamp(1.3rem,4vw,1.9rem); font-weight:900; transition:color 0.5s; }
+body.morning .app-header h1 { color:#2D3561; }
+body.evening .app-header h1 { color:#E8EEFF; }
+.app-header p { font-size:13px; font-weight:600; margin-top:3px; transition:color 0.5s; }
+body.morning .app-header p { color:#8A7040; }
+body.evening .app-header p { color:rgba(232,238,255,0.55); }
+
+/* Settings button */
+.settings-btn {
+  position:fixed; top:18px; right:16px; z-index:50;
+  width:40px; height:40px; border-radius:50%; border:none;
+  background:rgba(255,255,255,0.35); backdrop-filter:blur(10px);
+  font-size:18px; cursor:pointer; transition:all 0.2s;
+  box-shadow:0 2px 12px rgba(0,0,0,0.1);
+}
+.settings-btn:hover { transform:rotate(30deg) scale(1.1); }
+
+/* Kids columns */
+.kids-columns {
+  display:grid; gap:10px;
+  max-width:900px; margin:0 auto;
+  padding:0 10px;
+  position:relative; z-index:10;
+}
+.kids-columns.count-1 { grid-template-columns:1fr; max-width:420px; }
+.kids-columns.count-2 { grid-template-columns:1fr 1fr; }
+.kids-columns.count-3 { grid-template-columns:1fr 1fr 1fr; }
+.kids-columns.count-4 { grid-template-columns:1fr 1fr; }
+
+/* Kid card */
+.kid-card { border-radius:22px; padding:14px 12px; transition:background 0.5s; }
+body.morning .kid-card { background:rgba(255,255,255,0.6); box-shadow:0 4px 20px rgba(0,0,0,0.06); }
+body.evening .kid-card { background:rgba(255,255,255,0.07); box-shadow:0 4px 20px rgba(0,0,0,0.2); }
+
+.kid-card-header { display:flex; align-items:center; gap:8px; margin-bottom:12px; padding-bottom:10px; border-bottom:2px solid; }
+body.morning .kid-card-header { border-color:rgba(0,0,0,0.08); }
+body.evening .kid-card-header { border-color:rgba(255,255,255,0.1); }
+.kid-card-avatar { font-size:30px; }
+.kid-card-name { font-family:'Baloo 2',cursive; font-size:1.05rem; font-weight:800; flex:1; }
+body.morning .kid-card-name { color:#2D3561; }
+body.evening .kid-card-name { color:#E8EEFF; }
+.kid-age-badge { font-size:11px; font-weight:700; padding:3px 8px; border-radius:20px; background:rgba(167,139,250,0.15); color:#7C6FE0; }
+
+/* Progress */
+.mini-progress { margin-bottom:12px; }
+.mini-count { font-size:11px; font-weight:700; margin-bottom:4px; }
+body.morning .mini-count { color:#8A7040; }
+body.evening .mini-count { color:rgba(232,238,255,0.55); }
+.mini-bar { height:9px; border-radius:9px; overflow:hidden; }
+body.morning .mini-bar { background:rgba(0,0,0,0.08); }
+body.evening .mini-bar { background:rgba(255,255,255,0.1); }
+.mini-fill { height:100%; border-radius:9px; transition:width 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+
+/* Task */
+.task {
+  display:flex; align-items:center; gap:9px;
+  padding:10px 11px; border-radius:14px; margin-bottom:7px;
+  cursor:pointer; border:2px solid transparent;
+  transition:all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+  animation:slideIn 0.35s ease both; user-select:none;
+}
+@keyframes slideIn { from{opacity:0;transform:translateX(-10px)} to{opacity:1;transform:translateX(0)} }
+body.morning .task { background:rgba(255,255,255,0.88); }
+body.evening .task { background:rgba(255,255,255,0.06); }
+.task:active { transform:scale(0.96); }
+body.morning .task.done { background:rgba(107,203,119,0.15); border-color:var(--green); }
+body.evening .task.done { background:rgba(167,139,250,0.15); border-color:var(--purple); }
+.task-emoji { font-size:19px; flex-shrink:0; transition:transform 0.3s; }
+.task.done .task-emoji { transform:scale(1.15); }
+.task-text { flex:1; font-size:12px; font-weight:700; line-height:1.3; transition:all 0.2s; }
+body.morning .task-text { color:#2D3561; }
+body.evening .task-text { color:#E8EEFF; }
+.task.done .task-text { text-decoration:line-through; opacity:0.5; }
+.check {
+  width:22px; height:22px; border-radius:50%; border:2.5px solid;
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; flex-shrink:0;
+  transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+body.morning .check { border-color:#D0C0A0; color:transparent; }
+body.evening .check { border-color:rgba(232,238,255,0.2); color:transparent; }
+body.morning .task.done .check { background:var(--green); border-color:var(--green); color:white; }
+body.evening .task.done .check { background:var(--purple); border-color:var(--purple); color:white; }
+
+/* Celebration */
+.mini-celeb { display:none; text-align:center; padding:16px 8px; animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+.mini-celeb.show { display:block; }
+.celeb-emoji { font-size:52px; display:block; }
+.celeb-title { font-family:'Baloo 2',cursive; font-size:1rem; font-weight:800; margin:6px 0 4px; }
+body.morning .celeb-title { color:#2D3561; }
+body.evening .celeb-title { color:#E8EEFF; }
+.celeb-stars { font-size:18px; margin-bottom:10px; display:block; animation:starPulse 1s infinite alternate; }
+@keyframes starPulse { from{transform:scale(1)} to{transform:scale(1.15)} }
+.reset-btn { padding:8px 18px; border-radius:20px; border:none; font-family:'Nunito',sans-serif; font-size:12px; font-weight:700; cursor:pointer; }
+body.morning .reset-btn { background:var(--orange); color:white; }
+body.evening .reset-btn { background:var(--purple); color:white; }
+
+/* ========== SETTINGS PANEL ========== */
+.panel-overlay {
+  display:none; position:fixed; inset:0; z-index:100;
+  background:rgba(0,0,0,0.45); backdrop-filter:blur(4px);
+}
+.panel-overlay.open { display:block; animation:fadeIn 0.2s ease; }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+.settings-panel {
+  position:fixed; top:0; right:-100%; width:min(360px,100%); height:100vh;
+  background:white; z-index:101; overflow-y:auto;
+  transition:right 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  padding:0 0 40px;
+}
+.settings-panel.open { right:0; }
+
+.panel-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:24px 20px 16px;
+  border-bottom:2px solid #F0EEF8;
+  position:sticky; top:0; background:white; z-index:10;
+}
+.panel-header h2 { font-family:'Baloo 2',cursive; font-size:1.3rem; color:#2D3561; }
+.close-panel { background:none; border:none; font-size:22px; cursor:pointer; color:#aaa; }
+
+.panel-section { padding:20px 20px 0; }
+.panel-section-title { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#A78BFA; font-weight:700; margin-bottom:14px; }
+
+/* Kids management in settings */
+.settings-kid-row {
+  display:flex; align-items:center; gap:10px;
+  background:#F8F7FF; border-radius:14px; padding:12px 14px; margin-bottom:10px;
+}
+.settings-kid-row .avatar { font-size:26px; cursor:pointer; }
+.settings-kid-row input { flex:1; border:none; background:transparent; font-family:'Nunito',sans-serif; font-size:15px; font-weight:700; color:#2D3561; outline:none; }
+.settings-kid-row .del-btn { background:none; border:none; font-size:16px; color:#DDD; cursor:pointer; }
+.settings-kid-row .del-btn:hover { color:#FF6B9D; }
+
+.add-kid-settings {
+  width:100%; padding:11px; border-radius:14px; border:2px dashed #D8D4F0;
+  background:transparent; font-family:'Nunito',sans-serif; font-size:13px;
+  font-weight:700; color:#A78BFA; cursor:pointer; margin-bottom:6px;
+}
+
+/* Task editing */
+.time-tabs { display:flex; gap:8px; margin-bottom:16px; }
+.time-tab {
+  flex:1; padding:9px; border-radius:12px; border:2px solid #E8E4FF;
+  background:transparent; font-family:'Nunito',sans-serif; font-size:13px;
+  font-weight:700; color:#888; cursor:pointer; transition:all 0.2s;
+}
+.time-tab.active { background:#A78BFA; border-color:#A78BFA; color:white; }
+
+.task-edit-row {
+  display:flex; align-items:center; gap:8px;
+  background:#F8F7FF; border-radius:12px; padding:10px 12px; margin-bottom:8px;
+}
+.task-edit-row .emoji-btn { font-size:20px; cursor:pointer; flex-shrink:0; transition:transform 0.2s; }
+.task-edit-row .emoji-btn:hover { transform:scale(1.2); }
+.task-edit-row input { flex:1; border:none; background:transparent; font-family:'Nunito',sans-serif; font-size:13px; font-weight:700; color:#2D3561; outline:none; }
+.task-edit-row .del-task { background:none; border:none; font-size:14px; color:#DDD; cursor:pointer; }
+.task-edit-row .del-task:hover { color:#FF6B9D; }
+
+.add-task-btn {
+  width:100%; padding:10px; border-radius:12px; border:2px dashed #D8D4F0;
+  background:transparent; font-family:'Nunito',sans-serif; font-size:13px;
+  font-weight:700; color:#A78BFA; cursor:pointer; margin-bottom:6px; transition:all 0.2s;
+}
+.add-task-btn:hover { background:#F0EEFF; }
+
+.save-settings-btn {
+  margin:24px 20px 0; width:calc(100% - 40px); padding:14px; border-radius:16px;
+  border:none; background:linear-gradient(135deg,#667eea,#764ba2);
+  color:white; font-family:'Nunito',sans-serif; font-size:15px; font-weight:800;
+  cursor:pointer; transition:all 0.2s;
+}
+.save-settings-btn:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(102,126,234,0.35); }
+
+/* Reset all btn */
+.reset-all-btn {
+  margin:12px 20px 0; width:calc(100% - 40px); padding:12px; border-radius:16px;
+  border:2px solid #FFD0D0; background:transparent;
+  color:#FF6B6B; font-family:'Nunito',sans-serif; font-size:14px; font-weight:700;
+  cursor:pointer; transition:all 0.2s;
+}
+.reset-all-btn:hover { background:#FFF0F0; }
+
+/* iOS install hint */
+#ios-hint {
+  display:none; position:fixed; bottom:16px; left:50%; transform:translateX(-50%);
+  background:white; border-radius:20px; padding:16px 20px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.18); z-index:50; text-align:center;
+  max-width:300px; width:calc(100% - 32px);
+  animation:slideUpBanner 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+#ios-hint.show { display:block; }
+@keyframes slideUpBanner { from{opacity:0;transform:translateX(-50%) translateY(20px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
+#ios-hint p { font-size:13px; color:#444; line-height:1.6; }
+#ios-hint strong { color:#2D3561; }
+.close-hint { margin-top:12px; background:var(--orange); color:white; border:none; border-radius:12px; padding:8px 20px; font-family:'Nunito',sans-serif; font-weight:700; font-size:13px; cursor:pointer; }
+
+/* Install banner Android */
+#install-banner {
+  display:none; position:fixed; bottom:16px; left:50%; transform:translateX(-50%);
+  background:white; border-radius:20px; padding:14px 18px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.18); z-index:50;
+  align-items:center; gap:12px; max-width:340px; width:calc(100% - 32px);
+  animation:slideUpBanner 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+#install-banner.show { display:flex; }
+.install-text strong { display:block; font-size:14px; color:#2D3561; }
+.install-text span { font-size:12px; color:#888; }
+.inst-btn { background:var(--orange); color:white; border:none; border-radius:12px; padding:8px 14px; font-family:'Nunito',sans-serif; font-weight:700; font-size:13px; cursor:pointer; white-space:nowrap; }
+.inst-close { background:none; border:none; font-size:18px; color:#aaa; cursor:pointer; }
+
+/* Emoji picker for tasks */
+.emoji-picker-modal {
+  display:none; position:fixed; inset:0; z-index:300;
+  background:rgba(0,0,0,0.5); align-items:flex-end; justify-content:center;
+}
+.emoji-picker-modal.open { display:flex; }
+.emoji-picker-wrap {
+  background:white; border-radius:28px 28px 0 0; padding:20px 20px 40px;
+  width:100%; max-width:420px;
+  animation:slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.emoji-picker-wrap h3 { font-family:'Baloo 2',cursive; font-size:1rem; color:#2D3561; margin-bottom:12px; text-align:center; }
+.emoji-picker-grid { display:grid; grid-template-columns:repeat(8,1fr); gap:6px; max-height:240px; overflow-y:auto; }
+.ep-opt { font-size:24px; text-align:center; cursor:pointer; padding:6px; border-radius:10px; transition:all 0.15s; }
+.ep-opt:hover { background:#F0EEFF; transform:scale(1.2); }
+</style>
+</head>
+<body class="morning">
+
+<div class="stars" id="stars"></div>
+
+<!-- ========== SETUP SCREEN ========== -->
+<div id="screen-setup" class="screen active">
+  <div class="setup-card">
+    <span class="setup-logo">🌟</span>
+    <h1>Perheen Rutiinit</h1>
+    <p class="lead">Tehdään yhdessä — aamu ja ilta sujuvasti!</p>
+
+    <!-- Step 1: Add kids -->
+    <div class="setup-step active" id="setup-step-1">
+      <div class="step-label">Lisää lapset</div>
+      <div class="kids-list" id="setup-kids-list"></div>
+      <button class="add-kid-btn" onclick="addSetupKid()">+ Lisää lapsi</button>
+      <button class="primary-btn" onclick="finishSetup()">Valmis! Aloitetaan ✨</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== MAIN APP SCREEN ========== -->
+<div id="screen-app" class="screen">
+  <button class="settings-btn" onclick="openSettings()" title="Asetukset">⚙️</button>
+
+  <div class="toggle-wrap">
+    <div class="toggle">
+      <button class="toggle-btn active" id="btn-morning" onclick="setTime('morning')">☀️ Aamu</button>
+      <button class="toggle-btn" id="btn-evening" onclick="setTime('evening')">🌙 Ilta</button>
+    </div>
+  </div>
+
+  <div class="app-header">
+    <span class="big-emoji" id="big-emoji">☀️</span>
+    <h1 id="app-title">Hyvää huomenta!</h1>
+    <p id="app-subtitle">Tehdään aamuaskareet yhdessä 💪</p>
+  </div>
+
+  <div class="kids-columns" id="kids-columns"></div>
+</div>
+
+<!-- ========== SETTINGS PANEL ========== -->
+<div class="panel-overlay" id="panel-overlay" onclick="closeSettings()"></div>
+<div class="settings-panel" id="settings-panel">
+  <div class="panel-header">
+    <h2>⚙️ Asetukset</h2>
+    <button class="close-panel" onclick="closeSettings()">✕</button>
+  </div>
+
+  <div class="panel-section">
+    <div class="panel-section-title">Lapset</div>
+    <div id="settings-kids-list"></div>
+    <button class="add-kid-settings" onclick="addSettingsKid()">+ Lisää lapsi</button>
+  </div>
+
+  <div class="panel-section" style="margin-top:20px;">
+    <div class="panel-section-title">Tehtävät</div>
+    <div class="time-tabs">
+      <button class="time-tab active" id="tab-morning" onclick="switchTaskTab('morning')">☀️ Aamu</button>
+      <button class="time-tab" id="tab-evening" onclick="switchTaskTab('evening')">🌙 Ilta</button>
+    </div>
+    <div id="settings-tasks-morning"></div>
+    <div id="settings-tasks-evening" style="display:none;"></div>
+    <button class="add-task-btn" onclick="addTaskSetting()">+ Lisää tehtävä</button>
+  </div>
+
+  <button class="save-settings-btn" onclick="saveSettings()">💾 Tallenna muutokset</button>
+  <button class="reset-all-btn" onclick="resetAllProgress()">🔄 Nollaa kaikkien edistyminen</button>
+</div>
+
+<!-- Avatar picker (setup) -->
+<div class="avatar-modal" id="avatar-modal" onclick="closeAvatarModal(event)">
+  <div class="avatar-grid-wrap">
+    <h3>Valitse hahmo</h3>
+    <div class="avatar-grid" id="avatar-grid"></div>
+  </div>
+</div>
+
+<!-- Emoji picker (settings tasks) -->
+<div class="emoji-picker-modal" id="emoji-picker-modal" onclick="closeEmojiPicker(event)">
+  <div class="emoji-picker-wrap">
+    <h3>Valitse emoji</h3>
+    <div class="emoji-picker-grid" id="emoji-picker-grid"></div>
+  </div>
+</div>
+
+<!-- iOS hint -->
+<div id="ios-hint">
+  <p>📱 Asenna puhelimeesi!<br><br>Paina <strong>Jaa</strong> (□↑) → <strong>"Lisää aloitusnäytölle"</strong></p>
+  <button class="close-hint" onclick="document.getElementById('ios-hint').classList.remove('show')">Selvä! 👍</button>
+</div>
+
+<!-- Android install banner -->
+<div id="install-banner">
+  <span style="font-size:26px">⭐</span>
+  <div class="install-text">
+    <strong>Asenna sovellus!</strong>
+    <span>Toimii myös ilman nettiä</span>
+  </div>
+  <button class="inst-btn" onclick="installApp()">Asenna</button>
+  <button class="inst-close" onclick="document.getElementById('install-banner').classList.remove('show')">✕</button>
+</div>
+
+<script>
+// ===== DATA =====
+const AVATARS = ['🧒','👧','👦','👶','🧒‍♀️','🦁','🐻','🐼','🦊','🐯','🐸','🐧','🦄','🐙','🌟','🎈','🚀','🦋'];
+const TASK_EMOJIS = ['🚿','👕','🦷','💊','🧥','🛋️','🍽️','🧺','🌙','🚽','🤗','🍎','🎒','📚','🖍️','🧸','🎮','🏃','💤','🌈','🧴','👟','🧦','🪥','🛁','🥛','🥣','🍞','🧇','🥐'];
+
+const DEFAULT_TASKS = {
+  morning: [
+    {emoji:'🚿', text:'Käy pesulla'},
+    {emoji:'👕', text:'Vaihda vaatteet'},
+    {emoji:'🦷', text:'Pese hampaat'},
+    {emoji:'💊', text:'Ota vitamiinit'},
+    {emoji:'🧥', text:'Laita ulkovaatteet'},
+    {emoji:'🛋️', text:'Vie pyjama sohvalle'},
+  ],
+  evening: [
+    {emoji:'🍽️', text:'Syö illallinen'},
+    {emoji:'👕', text:'Ota päivävaatteet pois'},
+    {emoji:'🧺', text:'Vie likaiset vaatteet pyykkihuoneeseen'},
+    {emoji:'🌙', text:'Pue yövaatteet'},
+    {emoji:'🦷', text:'Pese hampaat'},
+    {emoji:'🚿', text:'Pese kasvot'},
+    {emoji:'🚽', text:'Käy pisulla'},
+    {emoji:'🤗', text:'Anna hali ja pusu'},
+  ]
+};
+
+// ===== STATE =====
+let appData = {
+  kids: [],
+  tasks: { morning: [...DEFAULT_TASKS.morning], evening: [...DEFAULT_TASKS.evening] },
+  progress: {} // kidId -> { morning: [indices], evening: [indices] }
+};
+
+let currentTime = 'morning';
+let settingsTaskTab = 'morning';
+let avatarTargetKid = null; // index in setup list
+let emojiTargetTask = null; // {time, index} for settings
+
+// ===== STORAGE =====
+function save() {
+  try { localStorage.setItem('rutiinit-v2', JSON.stringify(appData)); } catch(e) {}
+}
+function load() {
+  try {
+    const d = localStorage.getItem('rutiinit-v2');
+    if (d) { appData = JSON.parse(d); return true; }
+  } catch(e) {}
+  return false;
+}
+
+// ===== STARS =====
+for (let i = 0; i < 55; i++) {
+  const s = document.createElement('div');
+  s.className = 'star-dot';
+  const sz = Math.random()*3+1;
+  s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-delay:${Math.random()*3}s;animation-duration:${1.5+Math.random()*2}s`;
+  document.getElementById('stars').appendChild(s);
+}
+
+// ===== SETUP =====
+let setupKids = [];
+
+function addSetupKid() {
+  const id = Date.now();
+  setupKids.push({ id, name: '', avatar: AVATARS[setupKids.length % AVATARS.length], age: '' });
+  renderSetupKids();
+  setTimeout(() => {
+    const inputs = document.querySelectorAll('#setup-kids-list input[type=text]');
+    if (inputs.length) inputs[inputs.length-1].focus();
+  }, 100);
+}
+
+function renderSetupKids() {
+  const list = document.getElementById('setup-kids-list');
+  list.innerHTML = '';
+  setupKids.forEach((kid, i) => {
+    const row = document.createElement('div');
+    row.className = 'kid-setup-row';
+    row.innerHTML = `
+      <span class="avatar-pick" onclick="openAvatarModal(${i})">${kid.avatar}</span>
+      <input type="text" placeholder="Lapsen nimi" value="${kid.name}" oninput="setupKids[${i}].name=this.value">
+      <select class="age-select" onchange="setupKids[${i}].age=this.value">
+        <option value="">ikä</option>
+        ${Array.from({length:15},(_,k)=>`<option value="${k+1}" ${kid.age==k+1?'selected':''}>${k+1}v</option>`).join('')}
+      </select>
+      ${setupKids.length > 1 ? `<button class="remove-kid" onclick="removeSetupKid(${i})">✕</button>` : ''}
+    `;
+    list.appendChild(row);
+  });
+}
+
+function removeSetupKid(i) {
+  setupKids.splice(i, 1);
+  renderSetupKids();
+}
+
+function openAvatarModal(kidIndex) {
+  avatarTargetKid = kidIndex;
+  const grid = document.getElementById('avatar-grid');
+  grid.innerHTML = AVATARS.map(a => `<div class="avatar-opt" onclick="pickAvatar('${a}')">${a}</div>`).join('');
+  document.getElementById('avatar-modal').classList.add('open');
+}
+
+function pickAvatar(av) {
+  if (avatarTargetKid !== null && avatarTargetKid < setupKids.length) {
+    setupKids[avatarTargetKid].avatar = av;
+    renderSetupKids();
+  }
+  closeAvatarModal();
+}
+
+function closeAvatarModal(e) {
+  if (!e || e.target === document.getElementById('avatar-modal')) {
+    document.getElementById('avatar-modal').classList.remove('open');
+    avatarTargetKid = null;
+  }
+}
+
+function finishSetup() {
+  const valid = setupKids.filter(k => k.name.trim());
+  if (!valid.length) { alert('Lisää ainakin yksi lapsi!'); return; }
+  appData.kids = valid.map(k => ({ ...k, name: k.name.trim() }));
+  // Init progress
+  appData.kids.forEach(k => {
+    if (!appData.progress[k.id]) appData.progress[k.id] = { morning: [], evening: [] };
+  });
+  save();
+  showApp();
+}
+
+// ===== APP =====
+function showApp() {
+  document.getElementById('screen-setup').classList.remove('active');
+  document.getElementById('screen-app').classList.add('active');
+  autoSetTime();
+}
+
+function autoSetTime() {
+  const h = new Date().getHours();
+  setTime((h >= 6 && h < 15) ? 'morning' : 'evening');
+}
+
+function setTime(t) {
+  currentTime = t;
+  document.body.className = t;
+  document.getElementById('big-emoji').textContent = t === 'morning' ? '☀️' : '🌙';
+  document.getElementById('app-title').textContent = t === 'morning' ? 'Hyvää huomenta!' : 'Hyvää iltaa!';
+  document.getElementById('app-subtitle').textContent = t === 'morning' ? 'Tehdään aamuaskareet yhdessä 💪' : 'Ilta-askareet ennen nukkumaanmenoa 🌟';
+  document.getElementById('btn-morning').classList.toggle('active', t==='morning');
+  document.getElementById('btn-evening').classList.toggle('active', t==='evening');
+  renderKids();
+}
+
+function renderKids() {
+  const container = document.getElementById('kids-columns');
+  const n = appData.kids.length;
+  container.className = `kids-columns count-${Math.min(n,4)}`;
+  container.innerHTML = '';
+  appData.kids.forEach(kid => renderKidCard(kid, container));
+}
+
+const KID_COLORS = [
+  'linear-gradient(90deg,#FF9F43,#FFD93D)',
+  'linear-gradient(90deg,#FF6B9D,#FF9FC4)',
+  'linear-gradient(90deg,#6BCB77,#A8E6CF)',
+  'linear-gradient(90deg,#667eea,#A78BFA)',
+];
+
+function renderKidCard(kid, container) {
+  const tasks = appData.tasks[currentTime];
+  const done = appData.progress[kid.id]?.[currentTime] || [];
+  const total = tasks.length;
+  const kidIdx = appData.kids.indexOf(kid);
+  const colorGrad = KID_COLORS[kidIdx % KID_COLORS.length];
+
+  const card = document.createElement('div');
+  card.className = 'kid-card';
+  card.id = `card-${kid.id}`;
+
+  const celebEmojis = ['🏆','🌟','🎉','🥇'];
+  const allDone = done.length === total;
+
+  card.innerHTML = `
+    <div class="kid-card-header">
+      <span class="kid-card-avatar">${kid.avatar}</span>
+      <span class="kid-card-name">${kid.name}</span>
+      ${kid.age ? `<span class="kid-age-badge">${kid.age}v</span>` : ''}
+    </div>
+    <div class="mini-progress">
+      <div class="mini-count">${done.length} / ${total} tehty</div>
+      <div class="mini-bar"><div class="mini-fill" style="width:${(done.length/total*100)}%;background:${colorGrad}"></div></div>
+    </div>
+    <div id="tasklist-${kid.id}"></div>
+    <div class="mini-celeb ${allDone?'show':''}" id="celeb-${kid.id}">
+      <span class="celeb-emoji">${celebEmojis[kidIdx % celebEmojis.length]}</span>
+      <div class="celeb-title">${kid.name} — Hienoa! 🎉</div>
+      <span class="celeb-stars">⭐⭐⭐⭐⭐</span>
+      <button class="reset-btn" onclick="resetKid('${kid.id}')">Uudestaan 🔄</button>
+    </div>
+  `;
+  container.appendChild(card);
+
+  if (!allDone) {
+    const tl = document.getElementById(`tasklist-${kid.id}`);
+    tasks.forEach((task, i) => {
+      const isDone = done.includes(i);
+      const div = document.createElement('div');
+      div.className = 'task' + (isDone ? ' done' : '');
+      div.style.animationDelay = (i * 0.04) + 's';
+      div.innerHTML = `<span class="task-emoji">${task.emoji}</span><span class="task-text">${task.text}</span><div class="check">${isDone?'✓':''}</div>`;
+      div.onclick = () => toggleTask(kid.id, i);
+      tl.appendChild(div);
+    });
+  }
+}
+
+function toggleTask(kidId, index) {
+  if (!appData.progress[kidId]) appData.progress[kidId] = { morning: [], evening: [] };
+  const arr = appData.progress[kidId][currentTime];
+  const idx = arr.indexOf(index);
+  if (idx > -1) arr.splice(idx, 1); else arr.push(index);
+  save();
+  renderKids();
+}
+
+function resetKid(kidId) {
+  if (appData.progress[kidId]) appData.progress[kidId][currentTime] = [];
+  save();
+  renderKids();
+}
+
+function resetAllProgress() {
+  if (!confirm('Nollataan kaikkien edistyminen?')) return;
+  appData.kids.forEach(k => { appData.progress[k.id] = { morning: [], evening: [] }; });
+  save();
+  renderKids();
+  closeSettings();
+}
+
+// ===== SETTINGS =====
+function openSettings() {
+  renderSettingsKids();
+  renderSettingsTasks();
+  document.getElementById('settings-panel').classList.add('open');
+  document.getElementById('panel-overlay').classList.add('open');
+}
+
+function closeSettings() {
+  document.getElementById('settings-panel').classList.remove('open');
+  document.getElementById('panel-overlay').classList.remove('open');
+}
+
+// Temp settings state
+let settingsKids = [];
+let settingsTasks = { morning: [], evening: [] };
+
+function renderSettingsKids() {
+  settingsKids = appData.kids.map(k => ({...k}));
+  updateSettingsKidsList();
+}
+
+function updateSettingsKidsList() {
+  const list = document.getElementById('settings-kids-list');
+  list.innerHTML = '';
+  settingsKids.forEach((kid, i) => {
+    const row = document.createElement('div');
+    row.className = 'settings-kid-row';
+    row.innerHTML = `
+      <span class="avatar" onclick="openAvatarModalSettings(${i})">${kid.avatar}</span>
+      <input type="text" value="${kid.name}" oninput="settingsKids[${i}].name=this.value">
+      <select class="age-select" onchange="settingsKids[${i}].age=this.value" style="font-size:12px;padding:4px 6px;">
+        <option value="">ikä</option>
+        ${Array.from({length:15},(_,k)=>`<option value="${k+1}" ${kid.age==k+1?'selected':''}>${k+1}v</option>`).join('')}
+      </select>
+      ${settingsKids.length > 1 ? `<button class="del-btn" onclick="removeSettingsKid(${i})">✕</button>` : ''}
+    `;
+    list.appendChild(row);
+  });
+}
+
+function openAvatarModalSettings(i) {
+  avatarTargetKid = 's' + i; // prefix s = settings
+  const grid = document.getElementById('avatar-grid');
+  grid.innerHTML = AVATARS.map(a => `<div class="avatar-opt" onclick="pickAvatar('${a}')">${a}</div>`).join('');
+  document.getElementById('avatar-modal').classList.add('open');
+}
+
+// Override pickAvatar to handle settings context
+const _origPickAvatar = pickAvatar;
+function pickAvatar(av) {
+  if (avatarTargetKid !== null) {
+    if (typeof avatarTargetKid === 'string' && avatarTargetKid.startsWith('s')) {
+      const i = parseInt(avatarTargetKid.slice(1));
+      settingsKids[i].avatar = av;
+      updateSettingsKidsList();
+    } else {
+      setupKids[avatarTargetKid].avatar = av;
+      renderSetupKids();
+    }
+  }
+  document.getElementById('avatar-modal').classList.remove('open');
+  avatarTargetKid = null;
+}
+
+function removeSettingsKid(i) {
+  if (settingsKids.length <= 1) return;
+  settingsKids.splice(i, 1);
+  updateSettingsKidsList();
+}
+
+function addSettingsKid() {
+  settingsKids.push({ id: Date.now(), name: '', avatar: AVATARS[settingsKids.length % AVATARS.length], age: '' });
+  updateSettingsKidsList();
+  setTimeout(() => {
+    const inputs = document.querySelectorAll('#settings-kids-list input');
+    if (inputs.length) inputs[inputs.length-1].focus();
+  }, 100);
+}
+
+function renderSettingsTasks() {
+  settingsTasks = {
+    morning: appData.tasks.morning.map(t => ({...t})),
+    evening: appData.tasks.evening.map(t => ({...t}))
+  };
+  updateSettingsTasksList();
+}
+
+function switchTaskTab(tab) {
+  settingsTaskTab = tab;
+  document.getElementById('tab-morning').classList.toggle('active', tab==='morning');
+  document.getElementById('tab-evening').classList.toggle('active', tab==='evening');
+  document.getElementById('settings-tasks-morning').style.display = tab==='morning'?'block':'none';
+  document.getElementById('settings-tasks-evening').style.display = tab==='evening'?'block':'none';
+}
+
+function updateSettingsTasksList() {
+  ['morning','evening'].forEach(time => {
+    const container = document.getElementById(`settings-tasks-${time}`);
+    container.innerHTML = '';
+    settingsTasks[time].forEach((task, i) => {
+      const row = document.createElement('div');
+      row.className = 'task-edit-row';
+      row.innerHTML = `
+        <span class="emoji-btn" onclick="openEmojiPicker('${time}',${i})">${task.emoji}</span>
+        <input type="text" value="${task.text}" oninput="settingsTasks['${time}'][${i}].text=this.value">
+        <button class="del-task" onclick="removeTask('${time}',${i})">✕</button>
+      `;
+      container.appendChild(row);
+    });
+  });
+}
+
+function openEmojiPicker(time, index) {
+  emojiTargetTask = {time, index};
+  const grid = document.getElementById('emoji-picker-grid');
+  grid.innerHTML = TASK_EMOJIS.map(e => `<div class="ep-opt" onclick="pickTaskEmoji('${e}')">${e}</div>`).join('');
+  document.getElementById('emoji-picker-modal').classList.add('open');
+}
+
+function pickTaskEmoji(emoji) {
+  if (emojiTargetTask) {
+    settingsTasks[emojiTargetTask.time][emojiTargetTask.index].emoji = emoji;
+    updateSettingsTasksList();
+    emojiTargetTask = null;
+  }
+  document.getElementById('emoji-picker-modal').classList.remove('open');
+}
+
+function closeEmojiPicker(e) {
+  if (e.target === document.getElementById('emoji-picker-modal')) {
+    document.getElementById('emoji-picker-modal').classList.remove('open');
+    emojiTargetTask = null;
+  }
+}
+
+function removeTask(time, i) {
+  settingsTasks[time].splice(i, 1);
+  updateSettingsTasksList();
+}
+
+function addTaskSetting() {
+  settingsTasks[settingsTaskTab].push({emoji:'✏️', text:'Uusi tehtävä'});
+  updateSettingsTasksList();
+}
+
+function saveSettings() {
+  // Save kids
+  const validKids = settingsKids.filter(k => k.name.trim());
+  if (!validKids.length) { alert('Lisää ainakin yksi lapsi!'); return; }
+
+  // Ensure progress exists for new kids
+  validKids.forEach(k => {
+    if (!appData.progress[k.id]) appData.progress[k.id] = { morning: [], evening: [] };
+  });
+
+  appData.kids = validKids.map(k => ({...k, name: k.name.trim()}));
+  appData.tasks = {
+    morning: settingsTasks.morning.filter(t => t.text.trim()),
+    evening: settingsTasks.evening.filter(t => t.text.trim())
+  };
+
+  save();
+  renderKids();
+  closeSettings();
+}
+
+// ===== PWA =====
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault(); deferredPrompt = e;
+  document.getElementById('install-banner').classList.add('show');
+});
+function installApp() {
+  if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt.userChoice.then(() => { deferredPrompt = null; document.getElementById('install-banner').classList.remove('show'); }); }
+}
+
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+if (isIOS && !isStandalone) setTimeout(() => document.getElementById('ios-hint').classList.add('show'), 3000);
+
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+
+// ===== INIT =====
+function init() {
+  const hasData = load();
+  if (hasData && appData.kids && appData.kids.length > 0) {
+    showApp();
+  } else {
+    // Pre-add one kid row
+    addSetupKid();
+  }
+}
+
+init();
+</script>
+</body>
+</html>
