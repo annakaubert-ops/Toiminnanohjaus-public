@@ -9,7 +9,7 @@
 <meta name="theme-color" content="#F9A8D4">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>Perheen Rutiinit </title>
+<title>Perheen Rutiinit 🌸</title>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Comfortaa:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -290,7 +290,7 @@ body.evening .reset-all-btn { border-color:rgba(249,168,212,0.18); color:rgba(24
     </div>
   </div>
   <div class="app-header">
-    <span class="big-emoji" id="big-emoji"></span>
+    <span class="big-emoji" id="big-emoji">🌸</span>
     <h1 id="app-title">Hyvää huomenta!</h1>
     <p id="app-subtitle">Tehdään aamuaskareet yhdessä 💕</p>
   </div>
@@ -331,7 +331,7 @@ body.evening .reset-all-btn { border-color:rgba(249,168,212,0.18); color:rgba(24
 
 <div class="emoji-picker-modal" id="emoji-picker-modal" onclick="closeEmojiPicker(event)">
   <div class="emoji-picker-wrap">
-    <h3>Valitse emoji </h3>
+    <h3>Valitse emoji 🌸</h3>
     <div class="emoji-picker-grid" id="emoji-picker-grid"></div>
   </div>
 </div>
@@ -341,7 +341,7 @@ body.evening .reset-all-btn { border-color:rgba(249,168,212,0.18); color:rgba(24
   <button class="close-hint" onclick="document.getElementById('ios-hint').classList.remove('show')">Selvä! 🌸</button>
 </div>
 <div id="install-banner">
-  <span style="font-size:24px"></span>
+  <span style="font-size:24px">🌸</span>
   <div class="install-text"><strong>Asenna sovellus!</strong><span>Toimii myös ilman nettiä</span></div>
   <button class="inst-btn" onclick="installApp()">Asenna</button>
   <button class="inst-close" onclick="document.getElementById('install-banner').classList.remove('show')">✕</button>
@@ -381,7 +381,7 @@ function renderKidCard(kid,container){const tasks=appData.tasks[currentTime];con
 
 function toggleTask(kidId,index){if(!appData.progress[kidId])appData.progress[kidId]={morning:[],evening:[]};const arr=appData.progress[kidId][currentTime];const idx=arr.indexOf(index);if(idx>-1)arr.splice(idx,1);else arr.push(index);save();renderKids();}
 function resetKid(kidId){if(appData.progress[kidId])appData.progress[kidId][currentTime]=[];save();renderKids();}
-function resetAllProgress(){if(!confirm('Nollataan kaikkien edistyminen? '))return;appData.kids.forEach(k=>{appData.progress[k.id]={morning:[],evening:[]};});save();renderKids();closeSettings();}
+function resetAllProgress(){if(!confirm('Nollataan kaikkien edistyminen? 🌸'))return;appData.kids.forEach(k=>{appData.progress[k.id]={morning:[],evening:[]};});save();renderKids();closeSettings();}
 
 let settingsKids=[],settingsTasks={morning:[],evening:[]};
 function openSettings(){renderSettingsKids();renderSettingsTasks();document.getElementById('settings-panel').classList.add('open');document.getElementById('panel-overlay').classList.add('open');}
@@ -398,8 +398,8 @@ function openEmojiPicker(time,index){emojiTargetTask={time,index};document.getEl
 function pickTaskEmoji(emoji){if(emojiTargetTask){settingsTasks[emojiTargetTask.time][emojiTargetTask.index].emoji=emoji;updateSettingsTasksList();emojiTargetTask=null;}document.getElementById('emoji-picker-modal').classList.remove('open');}
 function closeEmojiPicker(e){if(e.target===document.getElementById('emoji-picker-modal')){document.getElementById('emoji-picker-modal').classList.remove('open');emojiTargetTask=null;}}
 function removeTask(time,i){settingsTasks[time].splice(i,1);updateSettingsTasksList();}
-function addTaskSetting(){settingsTasks[settingsTaskTab].push({emoji:'',text:'Uusi tehtävä'});updateSettingsTasksList();}
-function saveSettings(){const valid=settingsKids.filter(k=>k.name.trim());if(!valid.length){alert('Lisää ainakin yksi lapsi! ');return;}valid.forEach(k=>{if(!appData.progress[k.id])appData.progress[k.id]={morning:[],evening:[]};});appData.kids=valid.map(k=>({...k,name:k.name.trim()}));appData.tasks={morning:settingsTasks.morning.filter(t=>t.text.trim()),evening:settingsTasks.evening.filter(t=>t.text.trim())};save();renderKids();closeSettings();}
+function addTaskSetting(){settingsTasks[settingsTaskTab].push({emoji:'🌸',text:'Uusi tehtävä'});updateSettingsTasksList();}
+function saveSettings(){const valid=settingsKids.filter(k=>k.name.trim());if(!valid.length){alert('Lisää ainakin yksi lapsi! 🌸');return;}valid.forEach(k=>{if(!appData.progress[k.id])appData.progress[k.id]={morning:[],evening:[]};});appData.kids=valid.map(k=>({...k,name:k.name.trim()}));appData.tasks={morning:settingsTasks.morning.filter(t=>t.text.trim()),evening:settingsTasks.evening.filter(t=>t.text.trim())};save();renderKids();closeSettings();}
 
 let deferredPrompt=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;document.getElementById('install-banner').classList.add('show');});
