@@ -160,10 +160,16 @@ body.evening .app-header p { color:rgba(237,224,245,0.45); }
 .kids-columns.count-3 { grid-template-columns:1fr 1fr 1fr; }
 .kids-columns.count-4 { grid-template-columns:1fr 1fr; }
 @media (max-width:480px) {
-  .kids-columns.count-2,.kids-columns.count-3,.kids-columns.count-4 { grid-template-columns:1fr; max-width:420px; }
-}
-@media (min-width:481px) and (max-width:700px) {
-  .kids-columns.count-3 { grid-template-columns:1fr 1fr; }
+  /* 2 kids: always side by side, smaller padding */
+  .kids-columns.count-2 { grid-template-columns:1fr 1fr; gap:7px; padding:0 6px; }
+  /* 3-4 kids: 2 columns */
+  .kids-columns.count-3,.kids-columns.count-4 { grid-template-columns:1fr 1fr; }
+  /* Tighten card content on small screens with 2 cols */
+  .kids-columns.count-2 .kid-card { padding:11px 9px; }
+  .kids-columns.count-2 .task { padding:8px 9px; gap:7px; }
+  .kids-columns.count-2 .task-emoji { font-size:17px; }
+  .kids-columns.count-2 .task-text { font-size:11px; }
+  .kids-columns.count-2 .kid-card-name { font-size:0.85rem; }
 }
 
 .kid-card { border-radius:24px; padding:14px 12px; transition:background 0.5s,box-shadow 0.5s; }
