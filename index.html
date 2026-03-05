@@ -60,28 +60,14 @@ body.morning .icon-bubble svg { stroke:#C07090; }
 body.evening .icon-bubble svg { stroke:#F0A8C8; }
 
 /* Task icon bubble — smaller */
-.task-icon-bubble {
-  width:36px; height:36px; border-radius:12px;
-  display:flex; align-items:center; justify-content:center; flex-shrink:0;
-  transition: transform 0.3s;
-}
-body.morning .task-icon-bubble { background:#FDE8F5; }
-body.evening .task-icon-bubble { background:rgba(249,168,212,0.1); }
-.task-icon-bubble svg { width:18px; height:18px; }
-body.morning .task-icon-bubble svg { stroke:#C07090; }
-body.evening .task-icon-bubble svg { stroke:#F0A8C8; }
-.task.done .task-icon-bubble { transform:scale(1.1) rotate(5deg); }
-body.morning .task.done .task-icon-bubble { background:#D4F5DE; }
-body.morning .task.done .task-icon-bubble svg { stroke:#5AAF70; }
-body.evening .task.done .task-icon-bubble { background:rgba(167,139,250,0.15); }
-body.evening .task.done .task-icon-bubble svg { stroke:#A78BFA; }
+.task-emoji { font-size:22px; flex-shrink:0; transition:transform 0.3s; }
+.task.done .task-emoji { transform:scale(1.15) rotate(8deg); }
 
-.screen { display:none; min-height:100vh; position:relative; z-index:1; }
-.screen.active { display:block; }
+.screen { display:none !important; min-height:100vh; position:relative; z-index:1; }
+.screen.active { display:flex !important; flex-direction:column; }
 
 /* SETUP */
-#screen-setup { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; padding:32px 20px; background:linear-gradient(135deg,#FDE8F0 0%,#EDE9FE 100%); }
-#screen-setup.active { display:flex; }
+#screen-setup { flex-direction:column; align-items:center; justify-content:center; min-height:100vh; padding:32px 20px; background:linear-gradient(135deg,#FDE8F0 0%,#EDE9FE 100%); }
 .setup-card { background:white; border-radius:32px; padding:36px 28px; max-width:400px; width:100%; box-shadow:0 8px 48px rgba(200,100,150,0.13); animation:floatIn 0.6s cubic-bezier(0.34,1.4,0.64,1); }
 @keyframes floatIn { from{opacity:0;transform:translateY(28px) scale(0.95)} to{opacity:1;transform:translateY(0) scale(1)} }
 
@@ -103,7 +89,7 @@ body.evening .task.done .task-icon-bubble svg { stroke:#A78BFA; }
 .kid-setup-row .avatar-pick:hover { transform:scale(1.25) rotate(8deg); }
 .kid-setup-row input[type=text] { flex:1; border:none; background:transparent; font-family:'Quicksand',sans-serif; font-size:15px; font-weight:600; color:#5C3D52; outline:none; }
 .kid-setup-row input[type=text]::placeholder { color:#D4B8C8; }
-.age-select { border:1.5px solid #F0D5E5; border-radius:12px; padding:6px 10px; font-family:'Quicksand',sans-serif; font-size:13px; font-weight:600; color:#7C5D70; background:white; outline:none; cursor:pointer; flex-shrink:0; }
+
 .remove-kid { background:none; border:none; cursor:pointer; padding:4px; transition:opacity 0.2s; opacity:0.35; }
 .remove-kid:hover { opacity:1; }
 .remove-kid svg { width:16px; height:16px; stroke:#C07090; }
@@ -128,7 +114,6 @@ body.evening .task.done .task-icon-bubble svg { stroke:#A78BFA; }
 
 /* MAIN APP */
 #screen-app { padding-bottom:80px; }
-#screen-app.active { display:block; }
 
 .toggle-wrap { display:flex; justify-content:center; padding:20px 20px 8px; position:relative; z-index:10; }
 .toggle { display:flex; padding:5px; gap:4px; border-radius:50px; transition:background 0.5s,box-shadow 0.5s; }
@@ -191,9 +176,7 @@ body.evening .kid-card-header { border-color:rgba(255,255,255,0.07); }
 .kid-card-name { font-family:'Comfortaa',cursive; font-size:1rem; font-weight:700; flex:1; }
 body.morning .kid-card-name { color:#7C3D6E; }
 body.evening .kid-card-name { color:#EDE0F5; }
-.kid-age-badge { font-size:11px; font-weight:700; padding:3px 9px; border-radius:20px; font-family:'Quicksand',sans-serif; }
-body.morning .kid-age-badge { background:#FDE8F5; color:#C07090; }
-body.evening .kid-age-badge { background:rgba(196,181,253,0.13); color:#C4B5FD; }
+
 
 .mini-progress { margin-bottom:13px; }
 .mini-count { font-size:11px; font-weight:700; margin-bottom:5px; }
@@ -314,19 +297,22 @@ body.evening .time-tab.active svg { stroke:#C4B5FD; }
 .task-edit-row { display:flex; align-items:center; gap:8px; border-radius:14px; padding:10px 12px; margin-bottom:8px; border:1.5px solid; }
 body.morning .task-edit-row { background:#FDF5FA; border-color:#F5DCE9; }
 body.evening .task-edit-row { background:rgba(255,255,255,0.04); border-color:rgba(255,255,255,0.07); }
-.task-edit-row .task-icon-small { width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; transition:transform 0.2s; }
-body.morning .task-edit-row .task-icon-small { background:#FDE8F5; }
-body.evening .task-edit-row .task-icon-small { background:rgba(249,168,212,0.1); }
-.task-edit-row .task-icon-small svg { width:14px; height:14px; }
-body.morning .task-edit-row .task-icon-small svg { stroke:#C07090; }
-body.evening .task-edit-row .task-icon-small svg { stroke:#F0A8C8; }
-.task-edit-row .task-icon-small:hover { transform:scale(1.15) rotate(5deg); }
+.task-edit-emoji { font-size:20px; cursor:pointer; flex-shrink:0; transition:transform 0.2s; }
+.task-edit-emoji:hover { transform:scale(1.2) rotate(6deg); }
 .task-edit-row input { flex:1; border:none; background:transparent; font-family:'Quicksand',sans-serif; font-size:13px; font-weight:600; outline:none; }
 body.morning .task-edit-row input { color:#5C3D52; }
 body.evening .task-edit-row input { color:#EDE0F5; }
 .task-edit-row .del-task { background:none; border:none; cursor:pointer; padding:3px; opacity:0.3; transition:opacity 0.2s; }
 .task-edit-row .del-task:hover { opacity:1; }
 .task-edit-row .del-task svg { width:14px; height:14px; stroke:#C07090; }
+.drag-handle { display:flex; align-items:center; cursor:grab; padding:3px 2px; opacity:0.25; flex-shrink:0; transition:opacity 0.2s; touch-action:none; }
+.drag-handle:hover { opacity:0.7; }
+.drag-handle:active { cursor:grabbing; }
+.drag-handle svg { width:14px; height:14px; }
+body.morning .drag-handle svg { stroke:#7C3D6E; }
+body.evening .drag-handle svg { stroke:#EDE0F5; }
+.task-edit-row.dragging { opacity:0.4; transform:scale(0.98); }
+.task-edit-row.drag-over { border-color:#F9A8D4 !important; background:#FFF0F8 !important; }
 
 .add-task-btn { width:100%; padding:10px; border-radius:13px; border:2px dashed; background:transparent; font-family:'Quicksand',sans-serif; font-size:13px; font-weight:700; color:#D4729A; cursor:pointer; margin-bottom:6px; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:7px; }
 body.morning .add-task-btn { border-color:#F0C8DA; }
@@ -441,11 +427,12 @@ body .close-hint:hover svg { stroke:white; }
   <symbol id="ico-face" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 15s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="10" x2="9.01" y2="10"/><line x1="15" y1="10" x2="15.01" y2="10"/></symbol>
   <symbol id="ico-toilet" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18v2H3z"/><path d="M5 6v2a7 7 0 0 0 14 0V6"/><path d="M12 15v4"/><path d="M9 19h6"/></symbol>
   <symbol id="ico-hug" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="3"/><path d="M7 12c-2 1-3 3-3 5h16c0-2-1-4-3-5"/><path d="M5 17c-1 0-2 1-2 2v1h18v-1c0-1-1-2-2-2"/></symbol>
+  <symbol id="ico-drag" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="18" x2="16" y2="18"/></symbol>
   <symbol id="ico-pencil" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></symbol>
 </svg>
 
 <!-- SETUP SCREEN -->
-<div id="screen-setup" class="screen active">
+<div id="screen-setup" class="screen">
   <div class="setup-card">
     <div class="setup-logo-wrap">
       <div class="setup-logo-circle">
@@ -587,31 +574,26 @@ body .close-hint:hover svg { stroke:white; }
 <script>
 const AVATARS=['🧒','👧','👦','👶','🧒‍♀️','🦁','🐻','🐼','🦊','🐯','🐸','🐧','🦄','🐙','🐱','🐰','🐨','🦊'];
 
-// Task icon keys map to SVG symbol ids
-const TASK_ICONS = [
-  'ico-shower','ico-shirt','ico-tooth','ico-pill','ico-jacket','ico-sofa',
-  'ico-utensils','ico-basket','ico-pajamas','ico-face','ico-toilet','ico-hug',
-  'ico-sun','ico-moon','ico-star','ico-home','ico-pencil','ico-refresh'
-];
+const TASK_EMOJIS = ['🚿','👕','🦷','💊','🧥','🛋️','🍽️','🧺','🌙','🚽','🤗','🍎','🎒','📚','🖍️','🧸','🎮','🏃','💤','🌈','🧴','👟','🧦','🪥','🛁','🥛','🥣','🍞','🧇','🥐'];
 
 const DEFAULT_TASKS = {
   morning:[
-    {icon:'ico-shower', text:'Käy pesulla'},
-    {icon:'ico-shirt',  text:'Vaihda vaatteet'},
-    {icon:'ico-tooth',  text:'Pese hampaat'},
-    {icon:'ico-pill',   text:'Ota vitamiinit'},
-    {icon:'ico-jacket', text:'Laita ulkovaatteet'},
-    {icon:'ico-sofa',   text:'Vie pyjama sohvalle'},
+    {emoji:'🚿', text:'Käy pesulla'},
+    {emoji:'👕', text:'Vaihda vaatteet'},
+    {emoji:'🦷', text:'Pese hampaat'},
+    {emoji:'💊', text:'Ota vitamiinit'},
+    {emoji:'🧥', text:'Laita ulkovaatteet'},
+    {emoji:'🛋️', text:'Vie pyjama sohvalle'},
   ],
   evening:[
-    {icon:'ico-utensils', text:'Syö illallinen'},
-    {icon:'ico-shirt',    text:'Ota päivävaatteet pois'},
-    {icon:'ico-basket',   text:'Vie likaiset vaatteet pyykkihuoneeseen'},
-    {icon:'ico-pajamas',  text:'Pue yövaatteet'},
-    {icon:'ico-tooth',    text:'Pese hampaat'},
-    {icon:'ico-face',     text:'Pese kasvot'},
-    {icon:'ico-toilet',   text:'Käy pisulla'},
-    {icon:'ico-hug',      text:'Anna hali ja pusu'},
+    {emoji:'🍽️', text:'Syö illallinen'},
+    {emoji:'👕', text:'Ota päivävaatteet pois'},
+    {emoji:'🧺', text:'Vie likaiset vaatteet pyykkihuoneeseen'},
+    {emoji:'🌙', text:'Pue yövaatteet'},
+    {emoji:'🦷', text:'Pese hampaat'},
+    {emoji:'🚿', text:'Pese kasvot'},
+    {emoji:'🚽', text:'Käy pisulla'},
+    {emoji:'🤗', text:'Anna hali ja pusu'},
   ]
 };
 
@@ -620,16 +602,11 @@ let currentTime='morning',settingsTaskTab='morning',avatarTargetKid=null,iconTar
 
 function save(){try{localStorage.setItem('rutiinit-v3',JSON.stringify(appData));}catch(e){}}
 
-// Map old emojis to icon ids
-const EMOJI_TO_ICON={'🚿':'ico-shower','👕':'ico-shirt','🦷':'ico-tooth','💊':'ico-pill','🧥':'ico-jacket','🛋️':'ico-sofa','🍽️':'ico-utensils','🧺':'ico-basket','🌙':'ico-moon','🚽':'ico-toilet','🤗':'ico-hug','🍎':'ico-star','🎒':'ico-list','📚':'ico-list','🖍️':'ico-pencil','🧸':'ico-star','🎮':'ico-star','🏃':'ico-refresh','💤':'ico-moon','🌈':'ico-sun','🧴':'ico-shower','👟':'ico-shirt','🧦':'ico-shirt','🪥':'ico-tooth','🛁':'ico-shower','🥛':'ico-utensils','🥣':'ico-utensils','🍞':'ico-utensils','🧇':'ico-utensils','🥐':'ico-utensils','✏️':'ico-pencil','🌸':'ico-star'};
-
 function migrateTask(task, index, time){
-  // Already has icon key — check it's not an emoji string
-  if(task.icon && task.icon.startsWith('ico-')) return task;
-  // Has emoji field or icon field that is an emoji
-  const emoji = task.emoji || task.icon || '';
-  const icon = EMOJI_TO_ICON[emoji] || DEFAULT_TASKS[time][index]?.icon || 'ico-pencil';
-  return {icon, text: task.text};
+  // Ensure task has emoji field
+  if(task.emoji) return {emoji: task.emoji, text: task.text};
+  // Had old icon field — map back or use default
+  return {emoji: DEFAULT_TASKS[time][index]?.emoji || '✏️', text: task.text};
 }
 
 function load(){
@@ -661,7 +638,7 @@ function ico(id,cls=''){return `<svg viewBox="0 0 24 24" class="${cls}"><use hre
 // SETUP
 let setupKids=[];
 function addSetupKid(){setupKids.push({id:Date.now(),name:'',avatar:AVATARS[setupKids.length%AVATARS.length],age:''});renderSetupKids();setTimeout(()=>{const ins=document.querySelectorAll('#setup-kids-list input[type=text]');if(ins.length)ins[ins.length-1].focus();},100);}
-function renderSetupKids(){const list=document.getElementById('setup-kids-list');list.innerHTML='';setupKids.forEach((kid,i)=>{const row=document.createElement('div');row.className='kid-setup-row';row.innerHTML=`<span class="avatar-pick" onclick="openAvatarModal(${i})">${kid.avatar}</span><input type="text" placeholder="Lapsen nimi" value="${kid.name}" oninput="setupKids[${i}].name=this.value"><select class="age-select" onchange="setupKids[${i}].age=this.value"><option value="">ikä</option>${Array.from({length:15},(_,k)=>`<option value="${k+1}" ${kid.age==k+1?'selected':''}>${k+1}v</option>`).join('')}</select>${setupKids.length>1?`<button class="remove-kid" onclick="removeSetupKid(${i})">${ico('ico-x')}</button>`:''}`; list.appendChild(row);});}
+function renderSetupKids(){const list=document.getElementById('setup-kids-list');list.innerHTML='';setupKids.forEach((kid,i)=>{const row=document.createElement('div');row.className='kid-setup-row';row.innerHTML=`<span class="avatar-pick" onclick="openAvatarModal(${i})">${kid.avatar}</span><input type="text" placeholder="Lapsen nimi" value="${kid.name}" oninput="setupKids[${i}].name=this.value">${setupKids.length>1?`<button class="remove-kid" onclick="removeSetupKid(${i})">${ico('ico-x')}</button>`:''}`; list.appendChild(row);});}
 function removeSetupKid(i){setupKids.splice(i,1);renderSetupKids();}
 
 function openAvatarModal(idx){avatarTargetKid=idx;document.getElementById('avatar-grid').innerHTML=AVATARS.map(a=>`<div class="avatar-opt" onclick="pickAvatar('${a}')">${a}</div>`).join('');document.getElementById('avatar-modal').classList.add('open');}
@@ -671,7 +648,7 @@ function closeAvatarModal(e){if(!e||e.target===document.getElementById('avatar-m
 function finishSetup(){const valid=setupKids.filter(k=>k.name.trim());if(!valid.length){alert('Lisää ainakin yksi lapsi!');return;}appData.kids=valid.map(k=>({...k,name:k.name.trim()}));appData.kids.forEach(k=>{if(!appData.progress[k.id])appData.progress[k.id]={morning:[],evening:[]};});save();showApp();}
 
 // APP
-function showApp(){document.getElementById('screen-setup').classList.remove('active');document.getElementById('screen-app').classList.add('active');autoSetTime();}
+function showApp(){document.getElementById('screen-setup').classList.remove('active');document.getElementById('screen-app').classList.add('active');window.scrollTo(0,0);autoSetTime();}
 function autoSetTime(){const h=new Date().getHours();setTime((h>=6&&h<15)?'morning':'evening');}
 function setTime(t){
   currentTime=t;document.body.className=t;
@@ -701,7 +678,7 @@ function renderKidCard(kid,container){
     <div class="kid-card-header">
       <span class="kid-card-avatar">${kid.avatar}</span>
       <span class="kid-card-name">${kid.name}</span>
-      ${kid.age?`<span class="kid-age-badge">${kid.age}v</span>`:''}
+      
     </div>
     <div class="mini-progress">
       <div class="mini-count">${done.length} / ${total} tehty</div>
@@ -726,7 +703,7 @@ function renderKidCard(kid,container){
       div.className='task'+(isDone?' done':'');
       div.style.animationDelay=(i*0.05)+'s';
       div.innerHTML=`
-        <div class="task-icon-bubble">${ico((task.icon&&task.icon.startsWith('ico-'))?task.icon:'ico-pencil')}</div>
+        <span class="task-emoji">${task.emoji||'✏️'}</span>
         <span class="task-text">${task.text}</span>
         <div class="check">${ico('ico-check')}</div>`;
       div.onclick=()=>toggleTask(kid.id,i);
@@ -735,7 +712,81 @@ function renderKidCard(kid,container){
   }
 }
 
-function toggleTask(kidId,index){if(!appData.progress[kidId])appData.progress[kidId]={morning:[],evening:[]};const arr=appData.progress[kidId][currentTime];const idx=arr.indexOf(index);if(idx>-1)arr.splice(idx,1);else arr.push(index);save();renderKids();}
+// ===== SOUNDS =====
+let audioCtx = null;
+function getAudio(){ if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); return audioCtx; }
+
+function playDone(){
+  try {
+    const ctx = getAudio();
+    // Two cheerful ascending notes
+    [[523, 0, 0.12], [659, 0.1, 0.12], [784, 0.2, 0.18]].forEach(([freq, delay, dur]) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + delay);
+      gain.gain.setValueAtTime(0, ctx.currentTime + delay);
+      gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + delay + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + dur);
+      osc.start(ctx.currentTime + delay);
+      osc.stop(ctx.currentTime + delay + dur);
+    });
+  } catch(e) {}
+}
+
+function playUndone(){
+  try {
+    const ctx = getAudio();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(440, ctx.currentTime);
+    osc.frequency.linearRampToValueAtTime(330, ctx.currentTime + 0.12);
+    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.15);
+  } catch(e) {}
+}
+
+function playCelebration(){
+  try {
+    const ctx = getAudio();
+    // Fanfare: quick ascending arpeggio
+    [[523,0],[659,0.08],[784,0.16],[1047,0.24],[784,0.36],[1047,0.44]].forEach(([freq,delay]) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + delay);
+      gain.gain.setValueAtTime(0, ctx.currentTime + delay);
+      gain.gain.linearRampToValueAtTime(0.15, ctx.currentTime + delay + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + 0.18);
+      osc.start(ctx.currentTime + delay);
+      osc.stop(ctx.currentTime + delay + 0.2);
+    });
+  } catch(e) {}
+}
+
+function toggleTask(kidId,index){
+  if(!appData.progress[kidId])appData.progress[kidId]={morning:[],evening:[]};
+  const arr=appData.progress[kidId][currentTime];
+  const idx=arr.indexOf(index);
+  const completing = idx === -1;
+  if(idx>-1) arr.splice(idx,1); else arr.push(index);
+  save();
+  renderKids();
+  if(completing){
+    const tasks=appData.tasks[currentTime];
+    const allDone=arr.length===tasks.length;
+    if(allDone) setTimeout(playCelebration, 100);
+    else playDone();
+  } else {
+    playUndone();
+  }
+}
 function resetKid(kidId){if(appData.progress[kidId])appData.progress[kidId][currentTime]=[];save();renderKids();}
 function resetAllProgress(){if(!confirm('Nollataan kaikkien edistyminen?'))return;appData.kids.forEach(k=>{appData.progress[k.id]={morning:[],evening:[]};});save();renderKids();closeSettings();}
 
@@ -744,25 +795,104 @@ let settingsKids=[],settingsTasks={morning:[],evening:[]};
 function openSettings(){renderSettingsKids();renderSettingsTasks();document.getElementById('settings-panel').classList.add('open');document.getElementById('panel-overlay').classList.add('open');}
 function closeSettings(){document.getElementById('settings-panel').classList.remove('open');document.getElementById('panel-overlay').classList.remove('open');}
 function renderSettingsKids(){settingsKids=appData.kids.map(k=>({...k}));updateSettingsKidsList();}
-function updateSettingsKidsList(){const list=document.getElementById('settings-kids-list');list.innerHTML='';settingsKids.forEach((kid,i)=>{const row=document.createElement('div');row.className='settings-kid-row';row.innerHTML=`<span class="avatar" onclick="openAvatarModalSettings(${i})">${kid.avatar}</span><input type="text" value="${kid.name}" oninput="settingsKids[${i}].name=this.value"><select class="age-select" onchange="settingsKids[${i}].age=this.value" style="font-size:12px;padding:4px 8px;"><option value="">ikä</option>${Array.from({length:15},(_,k)=>`<option value="${k+1}" ${kid.age==k+1?'selected':''}>${k+1}v</option>`).join('')}</select>${settingsKids.length>1?`<button class="del-btn" onclick="removeSettingsKid(${i})">${ico('ico-x')}</button>`:''}`; list.appendChild(row);});}
+function updateSettingsKidsList(){const list=document.getElementById('settings-kids-list');list.innerHTML='';settingsKids.forEach((kid,i)=>{const row=document.createElement('div');row.className='settings-kid-row';row.innerHTML=`<span class="avatar" onclick="openAvatarModalSettings(${i})">${kid.avatar}</span><input type="text" value="${kid.name}" oninput="settingsKids[${i}].name=this.value">${settingsKids.length>1?`<button class="del-btn" onclick="removeSettingsKid(${i})">${ico('ico-x')}</button>`:''}`; list.appendChild(row);});}
 function openAvatarModalSettings(i){avatarTargetKid='s'+i;document.getElementById('avatar-grid').innerHTML=AVATARS.map(a=>`<div class="avatar-opt" onclick="pickAvatar('${a}')">${a}</div>`).join('');document.getElementById('avatar-modal').classList.add('open');}
 function removeSettingsKid(i){if(settingsKids.length<=1)return;settingsKids.splice(i,1);updateSettingsKidsList();}
 function addSettingsKid(){settingsKids.push({id:Date.now(),name:'',avatar:AVATARS[settingsKids.length%AVATARS.length],age:''});updateSettingsKidsList();setTimeout(()=>{const ins=document.querySelectorAll('#settings-kids-list input');if(ins.length)ins[ins.length-1].focus();},100);}
 
 function renderSettingsTasks(){settingsTasks={morning:appData.tasks.morning.map(t=>({...t})),evening:appData.tasks.evening.map(t=>({...t}))};updateSettingsTasksList();}
 function switchTaskTab(tab){settingsTaskTab=tab;document.getElementById('tab-morning').classList.toggle('active',tab==='morning');document.getElementById('tab-evening').classList.toggle('active',tab==='evening');document.getElementById('settings-tasks-morning').style.display=tab==='morning'?'block':'none';document.getElementById('settings-tasks-evening').style.display=tab==='evening'?'block':'none';}
-function updateSettingsTasksList(){['morning','evening'].forEach(time=>{const c=document.getElementById(`settings-tasks-${time}`);c.innerHTML='';settingsTasks[time].forEach((task,i)=>{const row=document.createElement('div');row.className='task-edit-row';row.innerHTML=`<div class="task-icon-small" onclick="openIconPicker('${time}',${i})">${ico((task.icon&&task.icon.startsWith('ico-'))?task.icon:'ico-pencil')}</div><input type="text" value="${task.text}" oninput="settingsTasks['${time}'][${i}].text=this.value"><button class="del-task" onclick="removeTask('${time}',${i})">${ico('ico-x')}</button>`;c.appendChild(row);});});}
+function updateSettingsTasksList(){['morning','evening'].forEach(time=>{const c=document.getElementById(`settings-tasks-${time}`);c.innerHTML='';settingsTasks[time].forEach((task,i)=>{const row=document.createElement('div');row.className='task-edit-row';row.draggable=true;row.dataset.index=i;row.dataset.time=time;row.innerHTML=`<div class="drag-handle">${ico('ico-drag')}</div><span class="task-edit-emoji" onclick="openEmojiPicker('${time}',${i})">${task.emoji||'✏️'}</span><input type="text" value="${task.text}" oninput="settingsTasks['${time}'][${i}].text=this.value"><button class="del-task" onclick="removeTask('${time}',${i})">${ico('ico-x')}</button>`;
+    row.addEventListener('dragstart',onDragStart);
+    row.addEventListener('dragover',onDragOver);
+    row.addEventListener('dragleave',onDragLeave);
+    row.addEventListener('drop',onDrop);
+    row.addEventListener('dragend',onDragEnd);
+    // Touch support
+    row.addEventListener('touchstart',onTouchStart,{passive:true});
+    row.addEventListener('touchmove',onTouchMove,{passive:false});
+    row.addEventListener('touchend',onTouchEnd);
+    c.appendChild(row);});});}
 
-function openIconPicker(time,index){
+// Drag & drop state
+let dragSrc=null, dragTime=null, dragIdx=null;
+
+function onDragStart(e){
+  dragSrc=this; dragTime=this.dataset.time; dragIdx=parseInt(this.dataset.index);
+  this.classList.add('dragging');
+  e.dataTransfer.effectAllowed='move';
+}
+function onDragOver(e){
+  e.preventDefault(); e.dataTransfer.dropEffect='move';
+  document.querySelectorAll('.task-edit-row').forEach(r=>r.classList.remove('drag-over'));
+  if(this!==dragSrc) this.classList.add('drag-over');
+}
+function onDragLeave(){this.classList.remove('drag-over');}
+function onDragEnd(){
+  document.querySelectorAll('.task-edit-row').forEach(r=>{r.classList.remove('dragging');r.classList.remove('drag-over');});
+}
+function onDrop(e){
+  e.preventDefault();
+  if(!dragSrc||this===dragSrc) return;
+  const toIdx=parseInt(this.dataset.index);
+  const time=dragTime;
+  const arr=settingsTasks[time];
+  const moved=arr.splice(dragIdx,1)[0];
+  arr.splice(toIdx,0,moved);
+  updateSettingsTasksList();
+}
+
+// Touch drag support
+let touchDragEl=null, touchDragClone=null, touchStartY=0, touchDragTime=null, touchDragIdx=null;
+function onTouchStart(e){
+  // Only start drag from handle
+  if(!e.target.closest('.drag-handle')) return;
+  touchDragEl=this; touchDragTime=this.dataset.time; touchDragIdx=parseInt(this.dataset.index);
+  touchStartY=e.touches[0].clientY;
+  touchDragEl.classList.add('dragging');
+}
+function onTouchMove(e){
+  if(!touchDragEl) return;
+  e.preventDefault();
+  const y=e.touches[0].clientY;
+  const els=document.querySelectorAll(`#settings-tasks-${touchDragTime} .task-edit-row`);
+  els.forEach(r=>r.classList.remove('drag-over'));
+  let target=null;
+  els.forEach(r=>{
+    const rect=r.getBoundingClientRect();
+    if(y>=rect.top && y<=rect.bottom && r!==touchDragEl) target=r;
+  });
+  if(target) target.classList.add('drag-over');
+}
+function onTouchEnd(e){
+  if(!touchDragEl) return;
+  const y=e.changedTouches[0].clientY;
+  const els=document.querySelectorAll(`#settings-tasks-${touchDragTime} .task-edit-row`);
+  let toIdx=null;
+  els.forEach(r=>{
+    const rect=r.getBoundingClientRect();
+    if(y>=rect.top && y<=rect.bottom && r!==touchDragEl) toIdx=parseInt(r.dataset.index);
+  });
+  if(toIdx!==null){
+    const arr=settingsTasks[touchDragTime];
+    const moved=arr.splice(touchDragIdx,1)[0];
+    arr.splice(toIdx,0,moved);
+  }
+  touchDragEl=null; touchDragTime=null; touchDragIdx=null;
+  document.querySelectorAll('.task-edit-row').forEach(r=>{r.classList.remove('dragging');r.classList.remove('drag-over');});
+  updateSettingsTasksList();
+}
+
+function openEmojiPicker(time,index){
   iconTargetTask={time,index};
   const grid=document.getElementById('icon-picker-grid');
-  grid.innerHTML=TASK_ICONS.map(id=>`<div class="ip-opt" onclick="pickTaskIcon('${id}')">${ico(id)}</div>`).join('');
+  grid.innerHTML=TASK_EMOJIS.map(e=>`<div class="ip-opt" onclick="pickTaskEmoji('${e}')" style="font-size:22px;background:none;border:none;">${e}</div>`).join('');
   document.getElementById('icon-picker-modal').classList.add('open');
 }
-function pickTaskIcon(iconId){if(iconTargetTask){settingsTasks[iconTargetTask.time][iconTargetTask.index].icon=iconId;updateSettingsTasksList();iconTargetTask=null;}document.getElementById('icon-picker-modal').classList.remove('open');}
+function pickTaskEmoji(emoji){if(iconTargetTask){settingsTasks[iconTargetTask.time][iconTargetTask.index].emoji=emoji;updateSettingsTasksList();iconTargetTask=null;}document.getElementById('icon-picker-modal').classList.remove('open');}
 function closeIconPicker(e){if(e.target===document.getElementById('icon-picker-modal')){document.getElementById('icon-picker-modal').classList.remove('open');iconTargetTask=null;}}
 function removeTask(time,i){settingsTasks[time].splice(i,1);updateSettingsTasksList();}
-function addTaskSetting(){settingsTasks[settingsTaskTab].push({icon:'ico-pencil',text:'Uusi tehtävä'});updateSettingsTasksList();}
+function addTaskSetting(){settingsTasks[settingsTaskTab].push({emoji:'✏️',text:'Uusi tehtävä'});updateSettingsTasksList();}
 
 function saveSettings(){const valid=settingsKids.filter(k=>k.name.trim());if(!valid.length){alert('Lisää ainakin yksi lapsi!');return;}valid.forEach(k=>{if(!appData.progress[k.id])appData.progress[k.id]={morning:[],evening:[]};});appData.kids=valid.map(k=>({...k,name:k.name.trim()}));appData.tasks={morning:settingsTasks.morning.filter(t=>t.text.trim()),evening:settingsTasks.evening.filter(t=>t.text.trim())};save();renderKids();closeSettings();}
 
@@ -775,7 +905,7 @@ const isStandalone=window.matchMedia('(display-mode: standalone)').matches;
 if(isIOS&&!isStandalone)setTimeout(()=>document.getElementById('ios-hint').classList.add('show'),3000);
 if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
 
-function init(){const hasData=load();if(hasData&&appData.kids&&appData.kids.length>0)showApp();else addSetupKid();}
+function init(){const hasData=load();if(hasData&&appData.kids&&appData.kids.length>0){showApp();}else{document.getElementById('screen-setup').classList.add('active');addSetupKid();}}
 init();
 </script>
 </body>
